@@ -3,16 +3,19 @@ const path = require('path');
 
 
 
-const argument = process.argv
+const argument = process.argv;
 
 
 
 dir = argument[2];
 
-console.log(fs.lstatSync(dir));
-
-
-//console.log("Es una carpeta " + fs.lstatSync(dir).isDirectory());
+//leer un archivo
+fs.readFile(dir, function(err,data){
+	if(err){
+		console.log(err)
+	}
+	console.log(data.toString());
+});
  
 
 
