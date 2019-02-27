@@ -1,8 +1,9 @@
 const fs = require('fs');
-const path = require('path');
+const path = require('path'); //
 
-const argument = process.argv;
-const dir = argument[2];
+const argument = path.resolve(process.argv);
+
+const dir = argument[2] ;
 
 // Obtener archivo y guardarlo en un array //
 const getFile = (dir) => {
@@ -17,8 +18,8 @@ const readFile = (fileArray) => {
 	return new Promise((resolve, reject) => {
 		fileArray.map(element => {
 			fs.readFile(element, 'utf8', (err, data) => {
-				const objDataPath = {};
-				objDataPath.path = element
+		const objDataPath = {};
+              objDataPath.path = element
 				objDataPath.data = data
 				resolve(objDataPath);
 			});
@@ -27,28 +28,23 @@ const readFile = (fileArray) => {
 }
 
 //buscar link 
-const findLinks = (fileArray) => {
+/*const findLinks = (fileArray) => {
 	return new Promise((resolve, reject) => {
 		const regExp = /([[].*]).https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
 		const arrUrl = fileArray.data.match(regExp);
-
 		const arr = [];
-		return new Promise(() => {
-			arrUrl.forEach(hrefElement => {
-				const splitElm = hrefElement.split('](');
-				arr.push({
-					href: splitElm[0],
-					text: splitElm[1],
-					file: dir
-				});
+		arrUrl.forEach(hrefElement => {
+			const splitElm = hrefElement.split('](');
+			arr.push({
+				href: splitElm[1]
 			});
-			resolve(arr);
 		});
+		resolve(arr);
 	});
-}
+}*/
 
 
-getFile(dir).then(readFile).then(findLinks).then(result => {
+getFile(dir).then(readFile).then(result => {
 	console.log(result);
 }).catch(() => {
 	console.log('error');
