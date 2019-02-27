@@ -4,7 +4,9 @@ const path = require('path');
 const argument = process.argv;
 const dir = argument[2];
 
-// Obtener archivo y guardarlo en un array //
+
+
+//leer la ruta, reconocer si es una carpeta o archivo si es una archivo guardarlo en una array //
 const getFile = (dir) => {
 	fileArray = [];
 	return new Promise((resolve, reject) => {
@@ -12,6 +14,15 @@ const getFile = (dir) => {
 		resolve(fileArray);
 	});
 }
+
+//validar que el archivo sea md
+const validateFileMd = (fileArray) => {
+	return new Promise((resolve,reject) =>{
+		let fileMd = fileArray.filter(file => path.extname(file) === '.md');
+		resolve(fileMd);
+	});
+}
+
 // leer archivo 
 const readFile = (fileArray) => {
 	return new Promise((resolve, reject) => {
@@ -37,8 +48,8 @@ const findLinks = (fileArray) => {
 			arrUrl.forEach(hrefElement => {
 				const splitElm = hrefElement.split('](');
 				arr.push({
-					href: splitElm[0],
-					text: splitElm[1],
+					href: splitElm[1],
+					text: splitElm[0],
 					file: dir
 				});
 			});
@@ -47,12 +58,18 @@ const findLinks = (fileArray) => {
 	});
 }
 
+//validar link 
+const valideteLink = (objLinks) => {
+	return new Promise ((resolve,reject)=>{
 
-getFile(dir).then(readFile).then(findLinks).then(result => {
+	});
+}
+
+
+getFile(dir).then(validateFileMd).then(result => {
 	console.log(result);
 }).catch(() => {
 	console.log('error');
-
 });
 
 
