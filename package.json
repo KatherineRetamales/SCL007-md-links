@@ -2,7 +2,9 @@
   "name": "md-links",
   "version": "0.1.0",
   "dependencies": {
+    "bluebird": "^3.5.3",
     "chai": "^4.2.0",
+    "resolve-path": "^1.4.0",
     "terminal-kit": "^1.27.0"
   },
   "description": "[Markdown](https://es.wikipedia.org/wiki/Markdown) es un lenguaje de marcado\r ligero muy popular entre developers. Es usado en muchísimas plataformas que\r manejan texto plano (GitHub, foros, blogs, ...), y es muy común\r encontrar varios archivos en ese formato en cualquier tipo de repositorio\r (empezando por el tradicional `README.md`).",
