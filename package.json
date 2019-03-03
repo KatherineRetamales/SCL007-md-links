@@ -1,25 +1,10 @@
 {
-  "name": "md-links",
-  "version": "0.1.0",
-  "dependencies": {
-    "bluebird": "^3.5.3",
-    "chai": "^4.2.0",
-    "resolve-path": "^1.4.0",
-    "terminal-kit": "^1.27.0"
-  },
-  "description": "[Markdown](https://es.wikipedia.org/wiki/Markdown) es un lenguaje de marcado\r ligero muy popular entre developers. Es usado en muchísimas plataformas que\r manejan texto plano (GitHub, foros, blogs, ...), y es muy común\r encontrar varios archivos en ese formato en cualquier tipo de repositorio\r (empezando por el tradicional `README.md`).",
+  "name": "scl007-md-links",
+  "version": "1.0.0",
+  "description": "Una librería que permite validar las url de los archivos con extension md.",
   "main": "index.js",
-  "bin": {
-    "md_links": "index.js"
-  },
   "directories": {
     "test": "test"
-  },
-  "devDependencies": {
-    "eslint": "^5.14.1",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.16.0",
-    "jest": "^24.1.0"
   },
   "scripts": {
     "test": "jest"
@@ -33,5 +18,11 @@
   "bugs": {
     "url": "https://github.com/KatherineRetamales/SCL007-md-links/issues"
   },
-  "homepage": "https://github.com/KatherineRetamales/SCL007-md-links#readme"
+  "homepage": "https://github.com/KatherineRetamales/SCL007-md-links#readme",
+  "dependencies": {
+    "node": "^11.10.0"
+  },
+  "devDependencies": {
+    "jest": "^24.1.0"
+  }
 }
