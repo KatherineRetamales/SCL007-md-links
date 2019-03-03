@@ -27,10 +27,10 @@ const getFilesArray = (dir) => {
 	});
 }
 
-//validar que el archivo sea md
-const validateFileMd = (arr) => {
+//filtrar solamente los archivos md
+const getFilesMd = (filesArray) => {
 	return new Promise((resolve, reject) => {
-		let fileMd = arr.filter(file => path.extname(file) === '.md');
+		let fileMd = filesArray.filter(file => path.extname(file) === '.md');
 		resolve(fileMd);
 	});
 }
@@ -93,7 +93,7 @@ const valideteLink = (objLinks) => {
 }
 
 
-getFilesArray(dir).then(result => {
+getFilesArray(dir).then(getFilesMd).then(result => {
 	console.log(result);
 }).catch(() => {
 	console.log('error');
