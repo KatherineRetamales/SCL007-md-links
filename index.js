@@ -46,8 +46,8 @@ const readFile = (fileMd) => {
 						reject(err);
 					} else {
 						const fileDataObj = {};
-						fileDataObj.nameFile= file,
-						fileDataObj.dataFile = data
+						fileDataObj.nameFile = file,
+							fileDataObj.dataFile = data
 						resolve(fileDataObj);
 					}
 				})
@@ -64,23 +64,33 @@ const readFile = (fileMd) => {
 }
 
 
-//buscar link 
-const findLinks = (fileArray) => {
+//buscar url de la ruta 
+const findUrl = (fileDataArray) => {
 	return new Promise((resolve, reject) => {
-		const regExp = /([[].*]).https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
-		const arrUrl = fileArray.data.match(regExp);
-
-		const arr = [];
-		return new Promise(() => {
-			arrUrl.forEach(hrefElement => {
-				const splitElm = hrefElement.split('](');
-				arr.push({
-					href: splitElm[1],
-					text: splitElm[0],
-					file: dir
+		const expReg = /([[].*]).https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
+		const arrayData = fileDataArray.map(file => {
+			return new Promise((resolve, reject) => {
+				const urlArray = file.dataFile.match(expReg);
+				const arrayObj = [];
+				for (url in urlArray) {
+					const splitData = urlArray[url].split('](');
+					arrayObj.push({
+						href: splitData[1],
+						text: splitData[0],
+						file: file.nameFile
+					});
+				}
+				resolve(arrayObj);
+			});
+		});
+		Promise.all(arrayData).then(file => {
+			const arrayObj =[];
+			file.forEach(elem =>{
+				elem.forEach(objElem =>{
+					arrayObj.push(objElem);
 				});
 			});
-			resolve(arr);
+			resolve(arrayObj);
 		});
 	});
 }
@@ -93,7 +103,7 @@ const valideteLink = (objLinks) => {
 }
 
 
-getFilesArray(dir).then(getFilesMd).then(readFile).then(result => {
+getFilesArray(dir).then(getFilesMd).then(readFile).then(findUrl).then(result => {
 	console.log(result);
 }).catch(() => {
 	console.log('error');
