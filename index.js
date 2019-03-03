@@ -35,30 +35,30 @@ const getFilesMd = (filesArray) => {
 	});
 }
 
-// leer archivo 
-// leer un archivo
-const readFileMd = (filesExtendMd) => {
+
+// leer uno o mas archivo de la ruta 
+const readFile = (fileMd) => {
 	return new Promise((resolve, reject) => {
-		const arrPromisesUtf = filesExtendMd.map(element => {
+		const fileArray = fileMd.map(file => {
 			return new Promise((resolve, reject) => {
-				fs.readFile(element, 'utf8', (err, data) => {
+				fs.readFile(file, 'utf8', (err, data) => {
 					if (err) {
-						throw new Error('Failed ')
+						reject(err);
 					} else {
-						const objDataPath = {}
-						objDataPath.path = element
-						objDataPath.data = data
-						resolve(objDataPath)
+						const fileDataObj = {};
+						fileDataObj.nameFile= file,
+						fileDataObj.dataFile = data
+						resolve(fileDataObj);
 					}
 				})
 			})
 		})
-		Promise.all(arrPromisesUtf).then(promisesUft => {
-			let totalData = []
-			promisesUft.forEach(objDataPath => {
-				totalData.push(objDataPath)
+		Promise.all(fileArray).then(file => {
+			let fileDataArray = []
+			file.forEach(fileDataObj => {
+				fileDataArray.push(fileDataObj)
 			})
-			resolve(totalData)
+			resolve(fileDataArray);
 		})
 	})
 }
@@ -93,7 +93,7 @@ const valideteLink = (objLinks) => {
 }
 
 
-getFilesArray(dir).then(getFilesMd).then(result => {
+getFilesArray(dir).then(getFilesMd).then(readFile).then(result => {
 	console.log(result);
 }).catch(() => {
 	console.log('error');
