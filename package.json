@@ -15,6 +15,9 @@
   },
   "author": "Katherine Retamales",
   "license": "ISC",
+  "bin": {
+    "mdLinks": "./index.js"
+  },
   "bugs": {
     "url": "https://github.com/KatherineRetamales/SCL007-md-links/issues"
   },
