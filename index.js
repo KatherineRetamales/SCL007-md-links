@@ -2,11 +2,10 @@ const fs = require('fs');
 const path = require('path');
 //path.resolve()método dará salida a la ruta absoluta
 const pathResolve = require('path').resolve;
-
-
+const https = require('https');
+const http = require('http');
 const argument = process.argv;
 const dir = argument[2];
-
 
 const getFilesArray = (dir) => {
 	const filesArray = [];
@@ -77,16 +76,18 @@ const findUrl = (fileDataArray) => {
 					arrayObj.push({
 						href: splitData[1],
 						text: splitData[0],
-						file: file.nameFile
+						file: file.nameFile,
+						statusMessage: null,
+						statusCode: null
 					});
 				}
 				resolve(arrayObj);
 			});
 		});
 		Promise.all(arrayData).then(file => {
-			const arrayObj =[];
-			file.forEach(elem =>{
-				elem.forEach(objElem =>{
+			const arrayObj = [];
+			file.forEach(elem => {
+				elem.forEach(objElem => {
 					arrayObj.push(objElem);
 				});
 			});
@@ -96,18 +97,57 @@ const findUrl = (fileDataArray) => {
 }
 
 //validar link 
-const valideteLink = (objLinks) => {
+const valideteUrl = (arrObj) => {
 	return new Promise((resolve, reject) => {
-
+		const arrPromises = arrObj.map(objElm => {
+			return new Promise((resolve, reject) => {
+				if (objElm.href.substr(0, 5) === 'https') {
+					https.get(objElm.href, res => {
+						objElm.statusMessage = res.statusMessage;
+						objElm.statusCode = res.statusCode;
+						resolve(objElm);
+					}).on('error', e => {
+						objElm.statusMessage = e;
+						objElm.statusCode = e;
+						resolve(objElm);
+					});
+				} else {
+					http.get(objElm.href, res => {
+						objElm.statusMessage = res.statusMessage;
+						objElm.statusCode = res.statusCode;
+						resolve(objElm);
+					}).on('error', e => {
+						objElm.statusMessage = e;
+						objElm.statusCode = e;
+						resolve(objElm);
+					});
+				}
+			});
+		});
+		Promise.all(arrPromises).then(promiseUrls => {
+			resolve(promiseUrls);
+		});
 	});
 }
 
 
-getFilesArray(dir).then(getFilesMd).then(readFile).then(findUrl).then(result => {
-	console.log(result);
-}).catch(() => {
-	console.log('error');
-});
+
+	getFilesArray(dir).then(getFilesMd).then(readFile).then(findUrl).then(valideteUrl).then(result => {
+		total = result.length;
+		
+		result.map(elem => {
+			console.log(`${elem.file}\t${elem.href}`);
+		});
+	}).catch(() => {
+		reject('error');
+	});
+
+
+
+
+
+
+
 
 
 
