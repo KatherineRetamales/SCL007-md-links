@@ -1,11 +1,12 @@
+#! / usr / bin / env nodo
 const fs = require('fs');
 const path = require('path');
-//path.resolve()método dará salida a la ruta absoluta
 const pathResolve = require('path').resolve;
 const https = require('https');
 const http = require('http');
 const argument = process.argv;
-const dir = argument[2];
+const dir = pathResolve(argument[2]);
+const options = argument.splice(3, 3);
 
 const getFilesArray = (dir) => {
 	const filesArray = [];
@@ -132,15 +133,55 @@ const valideteUrl = (arrObj) => {
 
 
 
-	getFilesArray(dir).then(getFilesMd).then(readFile).then(findUrl).then(valideteUrl).then(result => {
-		total = result.length;
-		
-		result.map(elem => {
-			console.log(`${elem.file}\t${elem.href}`);
-		});
-	}).catch(() => {
-		reject('error');
+getFilesArray(dir).then(getFilesMd).then(readFile).then(findUrl).then(valideteUrl).then(result => {
+	//total de url
+	const total = result.length;
+	const filterbroken = result.filter(url => url.statusCode !== 200);
+	//total roto
+	const broken = filterbroken.length;
+	const uniqueObj = {};
+	result.forEach(url => {
+		if (!uniqueObj.hasOwnProperty(url.href)) {
+			uniqueObj[url.href] = 0;
+		} else {
+			uniqueObj[url.href] = uniqueObj + 1;
+		}
 	});
+	const filterunique = Object.keys(uniqueObj).filter(url => uniqueObj[url] === 0);
+	//total unico
+	const unique = filterunique.length;
+	const resultObj = {};
+	if (options[0] === '--validate' && options[1] === '--stats') {
+		resultObj.total = total,
+			resultObj.unique = unique,
+			resultObj.broken = broken
+		console.log(resultObj);
+	} else if (options[0] === '--validate') {
+		console.log(result);
+	} else if (options[0] === '--stats'){
+		resultObj.total = total,
+			resultObj.unique = unique
+		console.log(resultObj);
+	}else if(options[0]!== '--validate' || options[0] !== '--stats'){
+		console.log('Debe escribir --validate o --stats o --validate --stats');
+		
+	}else if(options[0]!== '--validate' && options[1] !== '--stats'){
+		console.log('Debe escribir --validate --stats o --stats --validate');
+		
+	}else{
+		const resultArray = result.map(url => {
+			const obj = {}
+			obj.href = url.href
+			obj.file = url.file
+			obj.text = url.text
+			return obj
+		});
+		console.log(resultArray);
+		
+	}
+}).catch(() => {
+	console.log('error');
+});
 
 
 
